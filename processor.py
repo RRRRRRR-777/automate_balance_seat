@@ -1,5 +1,4 @@
 import pandas as pd
-import yaml
 import json
 import re
 import logging
@@ -19,16 +18,13 @@ class CSVProcessor:
         self._setup_logging()
 
     def _load_config(self, config_path: str) -> Dict[str, Any]:
-        """設定ファイルを読み込む（YAML/JSON両対応）"""
+        """設定ファイルを読み込む（JSON形式）"""
         try:
             with open(config_path, 'r', encoding='utf-8') as file:
-                if config_path.endswith('.json'):
-                    return json.load(file)
-                else:
-                    return yaml.safe_load(file)
+                return json.load(file)
         except FileNotFoundError:
             raise FileNotFoundError(f"設定ファイルが見つかりません: {config_path}")
-        except (yaml.YAMLError, json.JSONDecodeError) as e:
+        except json.JSONDecodeError as e:
             raise ValueError(f"設定ファイルの読み込みエラー: {e}")
 
     def _flatten_account_mapping(self) -> Dict[str, str]:
